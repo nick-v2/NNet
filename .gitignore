@@ -1,0 +1,5 @@
+build/
+test/
+dist/
+networks/*
+!networks/example.csv

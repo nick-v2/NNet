@@ -25,22 +25,16 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Toolkit;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-
 import java.awt.image.BufferedImage;
-
 import java.io.File;
 import java.io.IOException;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-
 import javax.imageio.ImageIO;
-
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -54,10 +48,8 @@ import javax.swing.JTextField;
  * A program for creating neural networks.
  *
  * @author Nick Vocaire
- * @since 6/5/18
- * TODO: Make it so user can select activation function Fix how
- * the brain layers are displayed to the screen(Sqrt) Create a recording
- * function and test it only learning when a key is pressed
+ * @since 6/5/18 TODO: Make it so user can select activation function, Fix how
+ * the brain layers are displayed to the screen(Sqrt)
  */
 public final class NeuralNetGUI {
 
@@ -867,7 +859,7 @@ public final class NeuralNetGUI {
             playFrames[2] = brainMap;
 
             networkTrainer = new Trainer(loadedNetwork, playFrames,
-                keyPressed, timeTrained, Integer.parseInt(updates.getText()),
+                    keyPressed, timeTrained, Integer.parseInt(updates.getText()),
                     Double.parseDouble(learnRate.getText()));
             networkTrainer.setMode(1);
             networkTrainer.start();
@@ -887,12 +879,11 @@ public final class NeuralNetGUI {
             if (!outputs.getText().equals("")) {
                 outputNeurons = new ONeuron[Integer.parseInt(
                         outputs.getText())];
-                
+
                 for (int i = 0; i < Integer.parseInt(outputs.getText()); i++) {
-                    
+
                     //Sets all output neurons to default in JComboBox for keys
-                    outputNeurons[i] = new ONeuron(keyEventFields[0],
-                            Math.random() * 11 - 5);
+                    outputNeurons[i] = new ONeuron(keyEventFields[0], 0);
                     //If its not in the comboBox
                     if (i > outputsList.getItemCount() - 1) {
                         outputsList.addItem(i + 1);
@@ -921,7 +912,7 @@ public final class NeuralNetGUI {
                     //If they set a region
                     && loadedNetwork.getRegionHeight() > 0) {
                 region.setVisible(false);
-                
+
                 //Allows for region window to close before converting
                 //original region
                 try {
@@ -1054,7 +1045,7 @@ public final class NeuralNetGUI {
             }
 
             g2.setColor(new Color(30, 170, 255));
-            g2.fillRect(0,0,screenshot.getWidth() / REGIONSCALE,40);
+            g2.fillRect(0, 0, screenshot.getWidth() / REGIONSCALE, 40);
         }
     }
 

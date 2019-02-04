@@ -2,14 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/G:/NetBeans/Nerual%20Network%20Maker/src/nnet/Layer.java</file>
-            <file>file:/G:/NetBeans/Nerual%20Network%20Maker/src/nnet/NeuralNetGUI.java</file>
-            <file>file:/G:/NetBeans/Nerual%20Network%20Maker/src/nnet/INeuron.java</file>
-            <file>file:/G:/NetBeans/Nerual%20Network%20Maker/src/nnet/ONeuron.java</file>
-            <file>file:/G:/NetBeans/Nerual%20Network%20Maker/src/nnet/Neuron.java</file>
-            <file>file:/G:/NetBeans/Nerual%20Network%20Maker/src/nnet/Network.java</file>
-            <file>file:/G:/NetBeans/Nerual%20Network%20Maker/src/nnet/Trainer.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

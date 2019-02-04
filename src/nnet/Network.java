@@ -18,20 +18,16 @@ package nnet;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
-
 import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.Robot;
-
 import java.awt.event.InputEvent;
-
 import java.awt.image.BufferedImage;
-
-import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  * Network of layers.
@@ -145,6 +141,7 @@ final class Network {
 
     /**
      * Method to set the training time of the network.
+     *
      * @param t the time to be set
      */
     protected void setNetTrainTime(final long t) {
@@ -243,6 +240,7 @@ final class Network {
 
     /**
      * Method to get the training time of the network.
+     *
      * @return the time the network has trained
      */
     protected long getNetTrainTime() {
@@ -284,7 +282,7 @@ final class Network {
     protected int getRegionY() {
         return regionY;
     }
-    
+
     /**
      * Returns the width of the focus area the network is looking at.
      *
@@ -492,7 +490,7 @@ final class Network {
      */
     protected void play() {
         int prevKey = keyInt;
-        setKeyProb();
+        setKeyDice();
 
         if (prevKey != 0) {
             robot.keyRelease(prevKey);
@@ -532,7 +530,7 @@ final class Network {
         int focusXInRegion = 0, focusYInRegion = 0, fColumn = 0, fRow = 0;
         BufferedImage area = robot.createScreenCapture(
                 new Rectangle(regionX, regionY, regionW, regionH));
-        if (focusH>0) {
+        if (focusH > 0) {
             focusXInRegion = focusX - regionX;
             focusYInRegion = focusY - regionY;
         }
@@ -566,7 +564,7 @@ final class Network {
                             //Gets color at pixel
                             Color color = new Color(area.getRGB(focusXInRegion
                                     + cp + (fColumn * miniW / 2), focusYInRegion
-                                            + rp + (fRow * miniH / 2)));
+                                    + rp + (fRow * miniH / 2)));
 
                             //Converts it to grayscale
                             int grayColor = (color.getRed() + color.getBlue()
@@ -615,7 +613,7 @@ final class Network {
             //region
             if ((focusH > 0) && (r * miniH) > focusYInRegion - focusH / 2
                     && (r * miniH) < focusYInRegion + focusH + focusH / 2) {
-                        fRow++;
+                fRow++;
             }
             fColumn = 0;
         }
@@ -770,6 +768,84 @@ final class Network {
     }
 
     /**
+     * Initializes the network with zero values for all weights and biases.
+     * Requires that the output Neurons are set.
+     *
+     * @param wid the width in pixels of the grey scale image
+     * @param heig the height in pixels of the grey scale image
+     * @param lay the # of hidden layers in the network
+     * @param neu the # of neurons in the network
+     */
+    protected void loadZero(final int wid, final int heig, final int lay,
+            final int neu) {
+        inputWidth = wid;
+        inputHeight = heig;
+        regionW = wid;
+        regionH = heig;
+
+        hiddenLayers = new Layer[lay]; //Make Layers
+        //Loop through all Layers
+        for (int i = 0; i < hiddenLayers.length; i++) {
+            Neuron[] n = new Neuron[neu]; //Make a neuron array for each Layer
+
+            for (int j = 0; j < n.length; j++) { //Loop through all Neurons
+
+                //If its not the last layer make a weights array based on
+                //how many neurons are in each layer
+                if (i != hiddenLayers.length - 1) {
+                    double[] weights = new double[neu];
+
+                    //Loop through all weights
+                    for (int w = 0; w < weights.length; w++) {
+
+                        //Set each weight randomly
+                        weights[w] = 0;
+                    }
+
+                    //Create each Neuron with its own weights to the next layer
+                    //and random bias.
+                    //Makes bias range larger because it is adjusted
+                    //more drastically
+                    n[j] = new Neuron(0, weights);
+
+                } else { //if last hidden layer
+                    //Same stuff as above but a diffrent abount of connection
+                    //to next layer(output layer)
+                    double[] weights = new double[outputNeurons.length];
+
+                    for (int w = 0; w < weights.length; w++) {
+                        weights[w] = 0;
+                    }
+                    n[j] = new Neuron(0, weights);
+                }
+            }
+            hiddenLayers[i] = new Layer(n);
+        }
+
+        //Multiplied width and height to get rectangle area
+        inputNeurons = new INeuron[wid * heig];
+
+        //Loop through input neurons
+        for (int i = 0; i < inputNeurons.length; i++) {
+
+            //Create weights for each neuron to the next layer
+            double[] weights = new double[hiddenLayers[0].getSize()];
+
+            for (int w = 0; w < weights.length; w++) {
+                weights[w] = 0;
+            }
+
+            //Set all input Neurons to have a base value of 0
+            inputNeurons[i] = new INeuron(weights);
+        }
+
+        try {
+            save(); //Save network
+        } catch (IOException ex) {
+        }
+    }
+
+    /**
      * Method for saving the network to a CSV file.
      *
      * @throws IOException File Not Found
@@ -782,10 +858,10 @@ final class Network {
 
             String[] row = {String.valueOf(inputWidth),
                 String.valueOf(inputHeight), type, String.valueOf(timeTrained),
-                    String.valueOf(regionW), String.valueOf(regionH),
-                        String.valueOf(regionX), String.valueOf(regionY),
-                            String.valueOf(focusW), String.valueOf(focusH),
-                                String.valueOf(focusX), String.valueOf(focusY)};
+                String.valueOf(regionW), String.valueOf(regionH),
+                String.valueOf(regionX), String.valueOf(regionY),
+                String.valueOf(focusW), String.valueOf(focusH),
+                String.valueOf(focusX), String.valueOf(focusY)};
             writer.writeNext(row, false);
 
             row = new String[]{String.valueOf(inputNeurons.length)};
@@ -827,6 +903,7 @@ final class Network {
 
     /**
      * Method for loading network from a CSV file.
+     *
      * @throws IOException File Not Found
      */
     protected void load() throws IOException {

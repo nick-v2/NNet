@@ -19,16 +19,12 @@ package nnet;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
 import java.net.ServerSocket;
 import java.net.Socket;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 import org.jnativehook.keyboard.NativeKeyEvent;
@@ -169,8 +165,8 @@ class Trainer extends Thread {
                         loadedNetwork.save();
                         lastSave = System.currentTimeMillis();
                         loadedNetwork.setNetTrainTime(
-                            loadedNetwork.getNetTrainTime() +
-                                    DEFAULT_SAVE_TIME/1000);
+                                loadedNetwork.getNetTrainTime()
+                                + DEFAULT_SAVE_TIME / 1000);
                     } catch (IOException ex) {
                         System.err.println(ex);
                     }
@@ -279,7 +275,7 @@ class Trainer extends Thread {
             frames[i].repaint();
         }
     }
-    
+
     /**
      * Method for displaying the time trained
      */
@@ -287,7 +283,7 @@ class Trainer extends Thread {
         long time = loadedNetwork.getNetTrainTime();
         long hour = time / 3600;
         time = time % 3600;
-        long min = time /  60;
+        long min = time / 60;
         time = time % 60;
         timeTrainedLabel.setText("H:" + hour + " M:" + min + " S:" + time);
     }
@@ -309,7 +305,7 @@ class Trainer extends Thread {
             loadedNetwork.play();
             keyPressedLabel.setText(loadedNetwork.getPressedKey());
             loadedNetwork.printOutputs();
-            
+
             displayTime();
 
         } else { //Training
@@ -368,7 +364,7 @@ class Trainer extends Thread {
         }
 
         //Loop through all layers reversed
-        for (int l = loadedNetwork.getLayerSize() - 1; l <= 0; l++) {
+        for (int l = loadedNetwork.getLayerSize() - 1; l >= 0; l--) {
             Layer layer = loadedNetwork.getLayer(l);
 
             //Loop through all neurons in the layer
@@ -458,11 +454,11 @@ class Trainer extends Thread {
         @Override
         public void nativeKeyPressed(final NativeKeyEvent k) {
             String globalKey = "VK_" + NativeKeyEvent.getKeyText(
-                        k.getKeyCode()).toUpperCase();
+                    k.getKeyCode()).toUpperCase();
 
             for (int o = 0; o < loadedNetwork.getOutputSize(); o++) {
                 if (globalKey.equals(
-                            loadedNetwork.getOutputNeuron(o).getKeyName())) {
+                        loadedNetwork.getOutputNeuron(o).getKeyName())) {
                     keyPressed = globalKey;
                 }
             }
